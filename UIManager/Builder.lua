@@ -47,8 +47,11 @@ function Builder:build_node(id, _config)
         uinode = UIManager.ENode:new(id, buildName)
     end
 
-    if not name_node_mapping[buildName] then
+    local name_node = name_node_mapping[buildName]
+    if not name_node then
         name_node_mapping[buildName] = { uinode }
+    else
+        table.insert(name_node, uinode)
     end
     nodes_list[id] = uinode
 end

@@ -41,7 +41,7 @@ function ENode:__init_children()
     for idx, node in ipairs(GameAPI.get_eui_children(self.id)) do
         local uinode = nodes_list[node] --[[@as UIManager.ENode]]
         uinode._parent = self
-        self._children[idx] = uinode
+        self._children:append(uinode)
     end
 end
 
