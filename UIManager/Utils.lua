@@ -4,6 +4,20 @@ UIManager.allroles = GameAPI.get_all_valid_roles()
 
 UIManager.nodes_list = {} --[[@as table<ENode, UIManager.ENode?>]]
 UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
+---@type table<string,
+---         {
+---             trigger: integer,
+---             [ENode]: {
+---             callbacks: fun(data: {
+---                 role: Role,
+---                 target: UIManager.ENodeUnion,
+---                 listener: UIManager.Listener
+---             })[],
+---             node: UIManager.ENodeUnion
+---         }?
+---     }?
+--->
+UIManager.event_handlers = {}
 
 UIManager.ECanvas = require "UIManager.ECanvas"
 UIManager.ENode = require "UIManager.ENode"
@@ -30,14 +44,14 @@ UIManager.ENodeType = {
 -- 通过名称查询节点数组
 ---@param _name string
 ---@return UIManager.ENodeUnion[]
-UIManager.query_nodes_by_name = function (_name)
+UIManager.query_nodes_by_name = function(_name)
     return UIManager.name_node_mapping[_name] or {}
 end
 
 -- 通过ID查询节点
 ---@param _id ENode
 ---@return UIManager.ENodeUnion?
-UIManager.query_node_by_id = function (_id)
+UIManager.query_node_by_id = function(_id)
     return UIManager.nodes_list[_id]
 end
 
@@ -50,6 +64,6 @@ UIManager.EVENT = {
 ---@param _node UIManager.ENodeUnion?
 ---@param _type `T`
 ---@return TypeGuard<T>
-UIManager.typeof = function (_node, _type)
+UIManager.typeof = function(_node, _type)
     return _node and _node.__name == _type or false
 end

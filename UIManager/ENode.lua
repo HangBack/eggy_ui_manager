@@ -19,6 +19,8 @@ local ENode = Class("UIManager.ENode")
 local nodes_list = UIManager.nodes_list
 local allroles = UIManager.allroles
 
+local event_handlers = UIManager.event_handlers
+
 ---@param _node ENode
 ---@param _name string
 function ENode:init(_node, _name)
@@ -126,19 +128,43 @@ end
 ---@return UIManager.Listener
 function ENode:on(_event, _callback)
     local listener = UIManager.Listener:new()
-    ---@param data {eui_node_id: ENode, role: Role}
-    local handler = LuaAPI.global_register_custom_event(_event, function(_, _, data)
-        local node = data.eui_node_id
-        if node == self._id then
-            self.client_role = data.role
-            _callback({
-                role = data.role,
-                target = self,
-                listener = listener
-            })
-        end
-    end)
-    listener.handler = handler
+    local handler = event_handlers[_event]
+    local trigger
+    if not handler then
+        event_handlers[_event] = {}
+        handler = event_handlers[_event]
+        
+        ---@param data {eui_node_id: ENode, role: Role}
+        trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
+            local handler_data = handler[data.eui_node_id]
+            if handler_data and handler_data.callbacks then
+                for _, callback in ipairs(handler_data.callbacks) do
+                    callback({
+                        role = data.role,
+                        target = handler_data.node,
+                        listener = listener
+                    })
+                end
+            end
+        end)
+        handler.trigger = trigger
+    end
+    
+    local handler_data = handler[self._id]
+    if not handler_data then
+        handler[self._id] = {
+            callbacks = { _callback },
+            node = self
+        }
+    else
+        table.insert(handler_data.callbacks, _callback)
+    end
+    
+    -- 设置 listener 的相关信息，用于后续删除
+    listener._event = _event
+    listener._callback = _callback
+    listener._node_id = self._id
+    
     return listener
 end
 
