@@ -19,6 +19,10 @@ function ArrayReadOnly:init(_sequence)
     self._data = _sequence._data
 end
 
+function ArrayReadOnly:__get_length()
+    return self._data._length
+end
+
 function ArrayReadOnly:append(value)
     error("This Array is read-only")
 end
