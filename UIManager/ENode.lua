@@ -137,7 +137,7 @@ function ENode:on(_event, _callback)
         ---@param data {eui_node_id: ENode, role: Role}
         trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
             local handler_data = handler[data.eui_node_id]
-            if handler_data and handler_data.callbacks then
+            if handler_data and handler_data.callbacks and not self.disabled then
                 for _, callback in ipairs(handler_data.callbacks) do
                     callback({
                         role = data.role,
