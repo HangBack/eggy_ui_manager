@@ -115,10 +115,10 @@ end
 
 function ENode:__update_disabled()
     if self.client_role then
-        self.client_role.set_node_touch_enabled(self._id, self._disabled)
+        self.client_role.set_node_touch_enabled(self._id, not self._disabled)
     else
         for _, role in ipairs(allroles) do
-            role.set_node_touch_enabled(self._id, self._disabled)
+            role.set_node_touch_enabled(self._id, not self._disabled)
         end
     end
 end
@@ -137,7 +137,7 @@ function ENode:listen(_event, _callback)
         ---@param data {eui_node_id: ENode, role: Role}
         trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
             local handler_data = handler[data.eui_node_id]
-            if handler_data and handler_data.callbacks and not self.disabled then
+            if handler_data and handler_data.callbacks and not self._disabled then
                 for _, callback in ipairs(handler_data.callbacks) do
                     callback({
                         role = data.role,
