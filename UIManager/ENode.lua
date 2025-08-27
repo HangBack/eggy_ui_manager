@@ -126,7 +126,7 @@ end
 ---@param _event string
 ---@param _callback fun(data: {role: Role, target: UIManager.ENode, listener: UIManager.Listener})
 ---@return UIManager.Listener
-function ENode:on(_event, _callback)
+function ENode:listen(_event, _callback)
     local listener = UIManager.Listener:new()
     local handler = event_handlers[_event]
     local trigger
