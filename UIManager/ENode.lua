@@ -123,6 +123,10 @@ function ENode:__update_disabled()
     end
 end
 
+function ENode:query_nodes_by_name()
+    
+end
+
 ---@param _event string
 ---@param _callback fun(data: {role: Role, target: UIManager.ENode, listener: UIManager.Listener})
 ---@return UIManager.Listener
@@ -138,6 +142,7 @@ function ENode:listen(_event, _callback)
         trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
             local handler_data = event_handlers[_event][data.eui_node_id]
             if handler_data and handler_data.callbacks and not handler_data.node._disabled then
+                handler_data.node.client_role = data.role
                 for _, callback in ipairs(handler_data.callbacks) do
                     callback({
                         role = data.role,
@@ -145,6 +150,7 @@ function ENode:listen(_event, _callback)
                         listener = listener
                     })
                 end
+                handler_data.node.client_role = nil
             end
         end)
         handler.trigger = trigger
