@@ -5,11 +5,11 @@
 ---@field font_size Fixed 字体大小
 ---@field normal_image ImageKey 常态图片
 ---@field pressed_image ImageKey 按下图片
----@field protected _text string 受保护的文本内容
----@field protected _text_color Color 受保护的文本颜色
----@field protected _font_size Fixed 受保护的字体大小
----@field protected _normal_image ImageKey 常态图片
----@field protected _pressed_image ImageKey 按下图片
+---@field protected __protected_text string 受保护的文本内容
+---@field protected __protected_text_color Color 受保护的文本颜色
+---@field protected __protected_font_size Fixed 受保护的字体大小
+---@field protected __protected_normal_image ImageKey 常态图片
+---@field protected __protected_pressed_image ImageKey 按下图片
 local EButton = Class("UIManager.EButton", UIManager.ENode)
 local allroles = UIManager.allroles
 
@@ -17,82 +17,82 @@ local allroles = UIManager.allroles
 ---@param _name string
 function EButton:init(_node, _name)
     UIManager.ENode.init(self, _node, _name)
-    self._text = ""
+    self.__protected_text = ""
 end
 
 function EButton:__set_disabled(value)
-    self._disabled = value
+    self.__protected_disabled = value
     self:__update_disabled()
 end
 
 function EButton:__update_disabled()
-    if self.client_role then
-        self.client_role.set_node_touch_enabled(self._id, self._disabled)
-        self.client_role.set_button_enabled(self._id, not self._disabled)
+    if UIManager.client_role then
+        UIManager.client_role.set_node_touch_enabled(self.__protected_id, self.__protected_disabled)
+        UIManager.client_role.set_button_enabled(self.__protected_id, not self.__protected_disabled)
     else
         for _, role in ipairs(allroles) do
-            role.set_node_touch_enabled(self._id, self._disabled)
-            role.set_button_enabled(self._id, not self._disabled)
+            role.set_node_touch_enabled(self.__protected_id, self.__protected_disabled)
+            role.set_button_enabled(self.__protected_id, not self.__protected_disabled)
         end
     end
 end
 
 function EButton:__get_text()
-    return self._text
+    return self.__protected_text
 end
 
 function EButton:__set_text(value)
-    self._text = value
+    self.__protected_text = value
     self:__update_text()
 end
 
 -- 更新文本数据
 function EButton:__update_text()
-    if self.client_role then
-        self.client_role.set_button_text(self._id, self._text)
+    if UIManager.client_role then
+        UIManager.client_role.set_button_text(self.__protected_id, self.__protected_text)
     else
         for _, role in ipairs(allroles) do
-            role.set_button_text(self._id, self._text)
+            role.set_button_text(self.__protected_id, self.__protected_text)
         end
     end
 end
 
 function EButton:__get_text_color()
-    return self._text_color
+    return self.__protected_text_color
 end
 
 function EButton:__set_text_color(value)
-    self._text_color = value
+    self.__protected_text_color = value
     self:__update_text_color()
 end
 
 -- 更新文本颜色
 function EButton:__update_text_color()
-    if self.client_role then
-        self.client_role.set_button_text_color(self._id, self._text_color)
+    if UIManager.client_role then
+        UIManager.client_role.set_button_text_color(self.__protected_id, self.__protected_text_color)
     else
         for _, role in ipairs(allroles) do
-            role.set_button_text_color(self._id, self._text_color)
+            role.set_button_text_color(self.__protected_id, self.__protected_text_color)
         end
     end
 end
 
 function EButton:__get_font_size()
-    return self._font_size
+    return self.__protected_font_size
 end
 
 function EButton:__set_font_size(value)
-    self._font_size = math.tofixed(value)
+    self.__protected_font_size = math.tofixed(value)
     self:__update_font_size()
 end
 
 -- 更新字体大小
 function EButton:__update_font_size()
-    if self.client_role then
-        self.client_role.set_button_font_size(self._id, self._font_size)
+    if UIManager.client_role then
+        UIManager.client_role.set_button_font_size(self.__protected_id, self.__protected_font_size)
     else
         for _, role in ipairs(allroles) do
-            role.set_button_font_size(self._id, self._font_size)
+            role.set_button_font_size(self.__protected_id, self.__protected_font_size)
         end
     end
 end

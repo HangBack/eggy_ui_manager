@@ -124,13 +124,13 @@ setmetatable(Class, {
                     if setter then
                         setter(t, value)
                     else
-                        -- 没有setter时直接设置值
-                        rawset(t, key, value)
-                    end
-
-                    local custom_new_index = find_new_custom_index(class_table)
-                    if custom_new_index then
-                        custom_new_index(t, key, value)
+                        local custom_new_index = find_new_custom_index(class_table)
+                        if custom_new_index then
+                            custom_new_index(t, key, value)
+                        else
+                            -- 没有setter时直接设置值
+                            rawset(t, key, value)
+                        end
                     end
                 end
             }

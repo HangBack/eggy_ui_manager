@@ -4,12 +4,10 @@
 ---@field name string UI名称 - 只读
 ---@field parent UIManager.ECanvas? 父亲节点 - 只读
 ---@field children ArrayReadOnly<UIManager.ECanvas> 子节点列表 - 只读
----@field client_role Role? 客户端玩家
----@field protected _id ECanvas 受保护的id值
----@field protected _name string 受保护的UI名称
----@field protected _parent UIManager.ECanvas 受保护的父亲节点
----@field protected _children Array<UIManager.ECanvas> 受保护的子节点列表
----@field protected _client_role Role? 受保护的客户端玩家
+---@field protected __protected_id ECanvas 受保护的id值
+---@field protected __protected_name string 受保护的UI名称
+---@field protected __protected_parent UIManager.ECanvas 受保护的父亲节点
+---@field protected __protected_children Array<UIManager.ECanvas> 受保护的子节点列表
 ---@field new fun(self: UIManager.ECanvas, _node: ECanvas, _name: string)
 local ECanvas = Class("UIManager.ECanvas")
 local nodes_list = UIManager.nodes_list
@@ -21,25 +19,25 @@ function ECanvas:init(_node, _name)
         nodes_list[_node] = nil
     end
     nodes_list[_node] = self
-    self._name = _name
-    self._parent = nil
-    self._id = _node
+    self.__protected_name = _name
+    self.__protected_parent = nil
+    self.__protected_id = _node
 
     local array = UIManager.Array:new() --[[@as Array<UIManager.ECanvas>]]
-    self._children = array
-    self._read_only_children = UIManager.ArrayReadOnly:new(array)
+    self.__protected_children = array
+    self.__protected_read_only_children = UIManager.ArrayReadOnly:new(array)
 end
 
 function ECanvas:__init_children()
     for idx, node in ipairs(GameAPI.get_eui_children(self.id)) do
         local uinode = nodes_list[node] --[[@as UIManager.ECanvas]]
-        uinode._parent = self
-        self._children:append(uinode)
+        uinode.__protected_parent = self
+        self.__protected_children:append(uinode)
     end
 end
 
 function ECanvas:__get_children()
-    return self._read_only_children
+    return self.__protected_read_only_children
 end
 
 function ECanvas:__set_children(value)
@@ -47,7 +45,7 @@ function ECanvas:__set_children(value)
 end
 
 function ECanvas:__get_parent()
-    return self._parent
+    return self.__protected_parent
 end
 
 function ECanvas:__set_parent(value)
@@ -55,7 +53,7 @@ function ECanvas:__set_parent(value)
 end
 
 function ECanvas:__get_name()
-    return self._name
+    return self.__protected_name
 end
 
 function ECanvas:__set_name(value)
@@ -63,7 +61,7 @@ function ECanvas:__set_name(value)
 end
 
 function ECanvas:__get_id()
-    return self._id
+    return self.__protected_id
 end
 
 function ECanvas:__set_id(value)

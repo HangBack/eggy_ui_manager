@@ -1,13 +1,15 @@
+---@class UIManager
+---@field client_role Role?
 UIManager = {}
 
 UIManager.allroles = GameAPI.get_all_valid_roles()
-
 UIManager.nodes_list = {} --[[@as table<ENode, UIManager.ENode?>]]
 UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
----@type table<string,
----         {
----             trigger: integer,
----             [ENode]: {
+---@type 
+--- {
+---     [string]: {
+---         trigger: integer,
+---         [ENode]: {
 ---             callbacks: fun(data: {
 ---                 role: Role,
 ---                 target: UIManager.ENodeUnion,
@@ -16,7 +18,7 @@ UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
 ---             node: UIManager.ENodeUnion
 ---         }?
 ---     }?
---->
+--- }
 UIManager.event_handlers = {}
 
 UIManager.ECanvas = require "UIManager.ECanvas"
