@@ -13,6 +13,7 @@
 ---@field protected __protected_children Array<UIManager.ENode> 受保护的子节点列表
 ---@field protected __protected_visible boolean 受保护的是否可见
 ---@field protected __protected_disabled boolean 受保护的是否禁用
+---@field protected data table 被保护的数据
 ---@field new fun(self: UIManager.ENode, _node: ENode, _name: string)
 local ENode = Class("UIManager.ENode")
 local nodes_list = UIManager.nodes_list
@@ -66,6 +67,7 @@ function ENode:init(_node, _name)
     end
     nodes_list[_node] = self
     self.client_data = { [-1] = {} }
+    self.data = {}
     self.__protected_name = _name
     self.__protected_parent = nil
     self.__protected_id = _node
@@ -153,8 +155,70 @@ function ENode:__update_disabled()
     end
 end
 
-function ENode:query_nodes_by_name()
+-- 根据名称查询第一个节点
+---@param name string
+---@return UIManager.ENodeUnion?
+function ENode:get_first_node_by_name(name)
+    local eui_id = GameAPI.get_eui_child_by_name(self.id, name)
+    local status, node = pcall(UIManager.query_node_by_id, eui_id) --[[@cast node UIManager.ENodeUnion]]
+    return status and node or nil
+end
 
+-- 根据名称查询节点
+---@param name string
+---@return UIManager.ENodeUnion[] | {[1]: nil}
+function ENode:query_nodes_by_name(name)
+    local list = {}
+    self.children:forEach(function(child)
+        if child.name == name then
+            table.insert(list, child)
+        end
+    end)
+    return list
+end
+
+-- 根据名称查询第一个节点（深度优先）
+---@param name string
+---@return UIManager.ENodeUnion?
+function ENode:get_first_node_by_name_dfs(name)
+    local node = self:get_first_node_by_name(name)
+    if node then
+        return node
+    end
+    for i = 1, self.children.length do
+        local child = self.children[i]
+        local dfs_node = child:get_first_node_by_name_dfs(name)
+        if dfs_node then
+            return dfs_node
+        end
+    end
+    return nil
+end
+
+-- 根据名称查询节点（深度优先）
+---@param name string
+---@return UIManager.ENodeUnion[] | {[1]: nil}
+function ENode:query_nodes_by_name_dfs(name)
+    local list = {}
+    ---@param node UIManager.ENode
+    ---@return boolean
+    local function dfs(node)
+        local nodes = node:query_nodes_by_name(name)
+        if nodes[1] then
+            table.insert(list, nodes[1])
+            return true
+        end
+        for i = 1, node.children.length do
+            local child = node.children[i]
+            local status = dfs(child)
+            if status then
+                return true
+            end
+        end
+        return false
+    end
+    dfs(self)
+    return list
 end
 
 -- 在事件回调中为每个玩家设置属性
@@ -167,6 +231,20 @@ function ENode:for_all_roles(key, value)
     UIManager.client_role = nil
     method(self, value)
     UIManager.client_role = client_role
+end
+
+-- 设置自定义属性
+---@param key string
+---@param value any
+function ENode:set_attribute(key, value)
+    self.data[key] = value
+end
+
+-- 获取自定义属性
+---@param key string
+---@return any
+function ENode:get_attribtue(key)
+    return self.data[key]
 end
 
 ---@param _event string
