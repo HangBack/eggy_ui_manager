@@ -6,6 +6,7 @@
 ---@field children ArrayReadOnly<UIManager.ENode> 子节点列表 - 只读
 ---@field visible boolean 是否可见
 ---@field disabled boolean 是否禁用
+---@field custom_data table 自定义数据
 ---@field client_data table<RoleID, table> 客户端数据
 ---@field protected __protected_id ENode 受保护的id值
 ---@field protected __protected_name string 受保护的UI名称
@@ -13,6 +14,7 @@
 ---@field protected __protected_children Array<UIManager.ENode> 受保护的子节点列表
 ---@field protected __protected_visible boolean 受保护的是否可见
 ---@field protected __protected_disabled boolean 受保护的是否禁用
+---@field protected __protected_custom_data table<RoleID, table> 受保护的自定义数据
 ---@field protected data table 被保护的数据
 ---@field new fun(self: UIManager.ENode, _node: ENode, _name: string)
 local ENode = Class("UIManager.ENode")
@@ -68,6 +70,7 @@ function ENode:init(_node, _name)
     nodes_list[_node] = self
     self.client_data = { [-1] = {} }
     self.data = {}
+    self.__protected_custom_data = {}
     self.__protected_name = _name
     self.__protected_parent = nil
     self.__protected_id = _node
@@ -91,6 +94,14 @@ end
 
 function ENode:__set_children(value)
     warn(("attempt to set a read-only value field 'children' of '%s'"):format(self.__protected_name))
+end
+
+function ENode:__get_custom_data()
+    return self.__protected_custom_data
+end
+
+function ENode:__set_custom_data(value)
+    self.__protected_custom_data = value
 end
 
 function ENode:__get_parent()

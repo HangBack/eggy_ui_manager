@@ -24,6 +24,7 @@ end
 
 function EImage:__set_image_color(value)
     self.__protected_image_color = value
+    self:__update_image_color()
 end
 
 -- 更新图片颜色
@@ -43,6 +44,7 @@ end
 
 function EImage:__set_image_texture(value)
     self.__protected_image_texture = value
+    self:__update_image_texture()
 end
 
 -- 更新图片预设

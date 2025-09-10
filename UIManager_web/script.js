@@ -102,32 +102,34 @@ class UINodesMerger {
 
         for (let line of lines) {
             line = line.trim();
-            
+
             // 解析有效行 (包括注释的行)
-            const match = line.match(/^\s*(?:--\s*)?\["([^"]+)"\]\s*=\s*"([^"]+)"\s*--\[\[@as\s+(\w+)\]\]/);
+            const match = line.match(/^\s*(?:--\s*)?(?:\["([^"]+)"\]|(\w+))\s*=\s*"([^"]+)"\s*--\[\[@as\s+(\w+)\]\]/);
             if (match) {
-                const [, name, id, type] = match;
+                const [, eng_name, name, id, type] = match;
+                const key = eng_name || name;
                 
+
                 // 以ID为键，名称和类型为值
-                this.data[id] = { name, type };
+                this.data[id] = { key, type };
             }
         }
     }
 
     generateOutput() {
         let output = '---AUTTO EXPORT BY EGGITOR PLUGIN, PLEASE DO NOT EDIT\n\nreturn {\n';
-        
+
         // 按ID排序
         const sortedIds = Object.keys(this.data).sort();
-        
+
         for (let i = 0; i < sortedIds.length; i++) {
             const id = sortedIds[i];
             const item = this.data[id];
-            
+
             // 格式: ["ID"] = {"名称", "类型"}
-            output += `\t["${id}"] = {"${item.name}", "${item.type}"},\n`;
+            output += `\t["${id}"] = {"${item.key}", "${item.type}"},\n`;
         }
-        
+
         output += '}';
         document.getElementById('outputText').value = output;
     }
@@ -164,7 +166,7 @@ class UINodesMerger {
         previewSection.innerHTML = '';
 
         const mergedGroups = Object.entries(this.data).filter(([name, items]) => items.length > 1);
-        
+
         if (mergedGroups.length === 0) {
             previewSection.innerHTML = '<div class="preview-item"><div class="preview-name">没有发现重复的元素</div></div>';
             return;
@@ -173,16 +175,16 @@ class UINodesMerger {
         mergedGroups.forEach(([name, items]) => {
             const previewItem = document.createElement('div');
             previewItem.className = 'preview-item';
-            
+
             const itemsHtml = items.map(item => `"${item.id}" --[[@as ${item.type}]]`).join(',\n        ');
-            
+
             previewItem.innerHTML = `
                 <div class="preview-name">"${name}" (${items.length} 个元素)</div>
                 <div class="preview-items">{
 ${itemsHtml}
 }</div>
             `;
-            
+
             previewSection.appendChild(previewItem);
         });
     }
@@ -195,7 +197,7 @@ ${itemsHtml}
     switchTab(targetTab) {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
+
         document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
         document.getElementById(targetTab).classList.add('active');
     }
@@ -211,7 +213,7 @@ ${itemsHtml}
         const content = document.getElementById('outputText').value;
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
-        
+
         const a = document.createElement('a');
         a.href = url;
         a.download = 'UINodes_merged.lua';
@@ -219,7 +221,7 @@ ${itemsHtml}
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         this.showMessage('文件下载已开始！', 'success');
     }
 
@@ -238,14 +240,14 @@ ${itemsHtml}
     showMessage(message, type) {
         // 移除现有消息
         document.querySelectorAll('.error-message, .success-message').forEach(el => el.remove());
-        
+
         const messageDiv = document.createElement('div');
         messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
         messageDiv.textContent = message;
-        
+
         const mainContent = document.querySelector('.main-content');
         mainContent.insertBefore(messageDiv, mainContent.firstChild);
-        
+
         // 3秒后自动移除
         setTimeout(() => {
             if (messageDiv.parentNode) {
