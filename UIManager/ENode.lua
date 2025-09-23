@@ -262,7 +262,7 @@ end
 ---@param _callback fun(data: {role: Role, target: UIManager.ENode, listener: UIManager.Listener})
 ---@return UIManager.Listener
 function ENode:listen(_event, _callback)
-    local listener = UIManager.Listener:new()
+    local listener = UIManager.Listener:new() --[[@as UIManager.Listener]]
     local handler = event_handlers[_event]
     local trigger
     if not handler then
@@ -291,7 +291,8 @@ function ENode:listen(_event, _callback)
     if not handler_data then
         handler[self.__protected_id] = {
             callbacks = { _callback },
-            node = self
+            node = self,
+            listener_id = listener.id
         }
     else
         table.insert(handler_data.callbacks, _callback)
@@ -303,6 +304,37 @@ function ENode:listen(_event, _callback)
     listener._node_id = self.__protected_id
 
     return listener
+end
+
+---@param role Role 触发者
+---@param _event_name string 事件名称
+function ENode:trigger(role, _event_name)
+    local handler = event_handlers[_event_name]
+    if handler then
+        local handler_data = handler[self.__protected_id]
+        if handler_data and handler_data.callbacks then
+            for _, callback in ipairs(handler_data.callbacks) do
+                callback({
+                    role = role,
+                    target = handler_data.node,
+                    listener = UIManager.Listener.query(handler_data.listener_id)
+                })
+            end
+            return
+        end
+    end
+    role.send_ui_custom_event(_event_name, {})
+end
+
+---@generic T
+---@param _interval integer 间隔帧数
+---@overload fun(self: T, _interval: integer): UIManager.Promise<T>
+function ENode:wait(_interval)
+    local promise = UIManager.Promise:new(self) --[[@as UIManager.Promise<UIManager.ENode>]]
+    UIManager.set_frame_out(math.max(_interval, 1), function(frameout)
+        promise:_resolve(self)
+    end)
+    return promise
 end
 
 return ENode

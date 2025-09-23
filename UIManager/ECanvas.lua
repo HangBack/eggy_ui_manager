@@ -9,6 +9,7 @@
 ---@field protected __protected_parent UIManager.ECanvas 受保护的父亲节点
 ---@field protected __protected_children Array<UIManager.ECanvas> 受保护的子节点列表
 ---@field new fun(self: UIManager.ECanvas, _node: ECanvas, _name: string)
+---@field wait fun(self: UIManager.ECanvas, _interval: integer): UIManager.Promise<UIManager.ECanvas>
 local ECanvas = Class("UIManager.ECanvas")
 local nodes_list = UIManager.nodes_list
 

@@ -1,3 +1,4 @@
+local ENode = require("UIManager.ENode")
 ---@class UIManager.ELabel : UIManager.ENode
 ---@field __name "UIManager.ELabel"
 ---@field text string 文本内容
@@ -30,6 +31,7 @@
 ---@field protected __protected_shadow boolean 是否阴影
 ---@field protected __protected_shadow_x_offset Fixed 阴影x偏移
 ---@field protected __protected_shadow_y_offset Fixed 阴影y偏移
+---@field wait fun(self: UIManager.ELabel, _interval: integer): UIManager.Promise<UIManager.ELabel>
 local ELabel = Class("UIManager.ELabel", UIManager.ENode)
 local allroles = UIManager.allroles
 
@@ -96,7 +98,7 @@ end
 function ELabel:__update_label_background_opactiy()
     if UIManager.client_role then
         UIManager.client_role.set_label_background_opacity(self.__protected_id, self
-        .__protected_label_background_opacity, self.__protected_transition_time)
+            .__protected_label_background_opacity, self.__protected_transition_time)
     else
         for _, role in ipairs(allroles) do
             role.set_label_background_opacity(self.__protected_id, self.__protected_label_background_opacity,
