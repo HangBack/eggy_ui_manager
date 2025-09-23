@@ -311,6 +311,8 @@ end
 ---@return UIManager.Promise<{role: Role, node: UIManager.ENodeUnion}>
 function ENode:trigger(role, _event_name)
     local handler = event_handlers[_event_name]
+    local temp = UIManager.client_role
+    UIManager.client_role = role
     if handler then
         local handler_data = handler[self.__protected_id]
         if handler_data and handler_data.callbacks then
@@ -322,11 +324,13 @@ function ENode:trigger(role, _event_name)
                 })
             end
             local promise = UIManager.Promise:new({ role = role, node = handler_data.node })
+            UIManager.client_role = temp
             return promise
         end
     end
     role.send_ui_custom_event(_event_name, {})
-    local promise = UIManager.Promise:new({role = role, node = nil})
+    local promise = UIManager.Promise:new({ role = role, node = nil })
+    UIManager.client_role = temp
     return promise
 end
 
