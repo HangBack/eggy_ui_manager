@@ -48,6 +48,21 @@ LuaAPI.call_delay_frame(1, function()
     --- 你可以使用 UIManager.typeof(_node: UIManager.ENodeUnion?, _type: T) 检查节点类型，这样你便可以轻松通过emmylua访问节点的方法
 end)
 ```
+# 常用API
+| API                                                                                                                                         | 说明                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| UIManager.query_nodes_by_name(_name: string): UIManager.ENodeUnion[]                                                                        | 通过名称查询节点                                                      |
+| UIManager.query_node_by_id(_name: string): UIManager.ENodeUnion?                                                                            | 通过ID查询节点                                                        |
+| ENode:get_first_node_by_name(name: string): UIManager.ENodeUnion?                                                                           | 根据名称查询子节点                                                    |
+| ENode:get_first_node_by_name_dfs(name: string): UIManager.ENodeUnion?                                                                       | 根据名称查询子节点（深度优先）                                        |
+| ENode:query_nodes_by_name(name: string): UIManager.ENodeUnion[]       \| {[1]: nil}                                                         | 根据名称查询子节点数组                                                |
+| ENode:query_nodes_by_name_dfs(name: string): UIManager.ENodeUnion[] \| {[1]: nil}                                                           | 根据名称查询子节点数组（深度优先）                                    |
+| ENode:for_all_roles(key: string, value: any)                                                                                                | 在事件回调中为每个玩家设置属性                                        |
+| ENode:listen(_event: string, _callback fun(data: {role: Role, target: UIManager.ENode, listener: UIManager.Listener}) : UIManager.Listener) | 将指定事件委派到节点上，使得某个事件仅对该节点生效                    |
+| ENode:trigger(role: Role, _event_name: string): UIManager.Promise<{role: Role, node: UIManager.ENodeUnion}>                                 | 以role的身份触发该节点的指定事件                                      |
+| ENode:wait(_interval: integer): UIManager.Promise<ENode>                                                                                    | 内部等待一定帧数，返回一个Promise对象，支持链式调用                   |
+| UIManager.Promise:wait(_interval: integer): UIManager.Promise<T>                                                                            | 内部等待一定帧数，返回一个Promise对象，支持链式调用                   |
+| UIManager.Promise:done_then(_callback fun(e: T) : G): UIManager.Promise<G>                                                                  | 在上一节点完成之后立即执行回调函数，返回一个Promise对象，支持链式调用 |
 
 # 贡献
 

@@ -308,6 +308,7 @@ end
 
 ---@param role Role 触发者
 ---@param _event_name string 事件名称
+---@return UIManager.Promise<{role: Role, node: UIManager.ENodeUnion}>
 function ENode:trigger(role, _event_name)
     local handler = event_handlers[_event_name]
     if handler then
@@ -320,10 +321,13 @@ function ENode:trigger(role, _event_name)
                     listener = UIManager.Listener.query(handler_data.listener_id)
                 })
             end
-            return
+            local promise = UIManager.Promise:new({ role = role, node = handler_data.node })
+            return promise
         end
     end
     role.send_ui_custom_event(_event_name, {})
+    local promise = UIManager.Promise:new({role = role, node = nil})
+    return promise
 end
 
 ---@generic T
