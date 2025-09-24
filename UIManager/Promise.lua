@@ -48,8 +48,8 @@ function Promise:done_then(_callback)
     else
         -- 如果未完成，将回调加入队列
         table.insert(self._callbacks, _callback)
-        return self
         UIManager.client_role = temp
+        return self
     end
 end
 
