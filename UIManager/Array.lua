@@ -1,11 +1,10 @@
 ---@generic T
----@class Array<T>: Class
+---@class UIManager.Array<T>: ClassUtil
 ---@field [integer] T 数组元素
 ---@field length integer 数组长度
 ---@field protected __protected_data T[] 数组数据
 ---@field protected __protected_length integer 数组长度
----@field new fun(self: Array): Array<T>
-local Array = Class("Array")
+local Array = UIManager.Class("UIManager.Array")
 
 function Array:__custom_index(key)
     return self.__protected_data[key]

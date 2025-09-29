@@ -3,8 +3,7 @@
 ---@field text string 文本内容
 ---@field text_color Color 文本颜色，Hex值，例如0xFF0000是红色
 ---@field protected __protected_text string 受保护的文本内容
----@field wait fun(self: UIManager.EInputField, _interval: integer): UIManager.Promise<UIManager.EInputField>
-local EInputField = Class("UIManager.EInputField", UIManager.ENode)
+local EInputField = UIManager.Class("UIManager.EInputField", UIManager.ENode)
 local allroles = UIManager.allroles
 
 ---@param _node ENode

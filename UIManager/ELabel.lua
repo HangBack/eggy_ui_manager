@@ -31,8 +31,7 @@ local ENode = require("UIManager.ENode")
 ---@field protected __protected_shadow boolean 是否阴影
 ---@field protected __protected_shadow_x_offset Fixed 阴影x偏移
 ---@field protected __protected_shadow_y_offset Fixed 阴影y偏移
----@field wait fun(self: UIManager.ELabel, _interval: integer): UIManager.Promise<UIManager.ELabel>
-local ELabel = Class("UIManager.ELabel", UIManager.ENode)
+local ELabel = UIManager.Class("UIManager.ELabel", UIManager.ENode)
 local allroles = UIManager.allroles
 
 ---@param _node ENode

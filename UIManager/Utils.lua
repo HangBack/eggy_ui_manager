@@ -1,3 +1,4 @@
+local Class = require 'UIManager.ClassUtils'
 ---@class UIManager
 ---@field client_role Role?
 UIManager = {}
@@ -8,8 +9,8 @@ UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
 ---@type 
 --- {
 ---     [string]: {
----         trigger: integer,
----         [ENode]: {
+---         ["trigger"]: integer,
+---         [string]: {
 ---             callbacks: fun(data: {
 ---                 role: Role,
 ---                 target: UIManager.ENodeUnion,
@@ -22,6 +23,7 @@ UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
 --- }
 UIManager.event_handlers = {}
 
+UIManager.Class = Class
 UIManager.ECanvas = require "UIManager.ECanvas"
 UIManager.ENode = require "UIManager.ENode"
 UIManager.ELabel = require "UIManager.ELabel"
@@ -84,7 +86,7 @@ end
 ---@param count integer? 重复次数，-1为无限次
 ---@param immediately boolean? 是否立即执行回调
 UIManager.set_frame_out = function(interval, callback, count, immediately)
-    count = count or 1
+    count = count or 1 --[[@as integer]]
     local frameout = {
         frame = 0,
         left_count = count,
@@ -106,7 +108,6 @@ UIManager.set_frame_out = function(interval, callback, count, immediately)
     ---销毁计时器
     frameout.destroy = function()
         LuaAPI.global_unregister_trigger_event(handler)
-        frameout = nil
     end
     ---暂停计时器
     frameout.pause = function()

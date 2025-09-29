@@ -1,11 +1,11 @@
 ---@generic T, C
----@class UIManager.Promise<T>
+---@class UIManager.Promise<T> : ClassUtil
 ---@field role Role
 ---@field new fun(self: UIManager.Promise, value: T): UIManager.Promise
 ---@field protected _is_completed boolean
-local Promise = Class("UIManager.Promise")
+local Promise = UIManager.Class("UIManager.Promise")
 
----@param value T
+---@param value? T
 function Promise:init(value)
     self._value = value
     self._callbacks = {}
@@ -38,7 +38,7 @@ function Promise:done_then(_callback)
         local result = _callback(self._value)
         if result ~= nil then
             -- 创建新的 Promise 并传递返回值
-            local new_promise = Promise:new(result)
+            local new_promise = Promise(result)
             new_promise:_resolve(result)
             return new_promise
         else
@@ -60,7 +60,7 @@ function Promise:wait(_interval)
     UIManager.client_role = self.role
     if self._is_completed then
         -- 如果已经完成，创建新的 Promise 进行等待
-        local new_promise = Promise:new(self._value)
+        local new_promise = Promise(self._value)
 
         UIManager.set_frame_out(_interval, function()
             new_promise:_resolve(self._value)
@@ -69,7 +69,7 @@ function Promise:wait(_interval)
         return new_promise
     else
         -- 如果未完成，创建新的 Promise 等待当前 Promise 完成后再等待指定帧数
-        local new_promise = Promise:new()
+        local new_promise = Promise()
         table.insert(self._callbacks, function(value)
             UIManager.set_frame_out(_interval, function()
                 new_promise:_resolve(value)

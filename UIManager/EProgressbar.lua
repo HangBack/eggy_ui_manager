@@ -8,8 +8,7 @@
 ---@field protected __protected_max_value integer 最大进度值
 ---@field protected __protected_min_value integer 最小进度值
 ---@field protected __protected_transition_time Fixed 受保护的样式变化时间
----@field wait fun(self: UIManager.EProgressbar, _interval: integer): UIManager.Promise<UIManager.EProgressbar>
-local EProgressbar = Class("UIManager.EProgressbar", UIManager.ENode)
+local EProgressbar = UIManager.Class("UIManager.EProgressbar", UIManager.ENode)
 local allroles = UIManager.allroles
 
 ---@param _node ENode

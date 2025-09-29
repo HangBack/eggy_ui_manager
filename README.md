@@ -15,7 +15,6 @@
 
 接着在想要使用UI管理器，你需要在你的main文件中导入所需文件
 ```lua
-require "ClassUtils"
 require "UIManager.Utils"
 ```
 
@@ -36,13 +35,12 @@ require "UIManager.Utils"
 做好以上工作后，现在你可以使用UI管理器构建UI节点了！
 例如
 ```lua
-require "ClassUtils"
 require "UIManager.Utils"
 
 local test_data = require "test_data"
 
 LuaAPI.call_delay_frame(1, function()
-    UIManager.Builder:new(test_data)
+    UIManager.Builder(test_data)
     --- 你可以使用 UIManager.query_nodes_by_name(_name: string) 获取对应名称的控件，注意，该方法会返回一个数组
     --- 除此之外，你也可以使用 UIManager.query_node_by_id(_id_: string) 获取对应类型的控件。
     --- 你可以使用 UIManager.typeof(_node: UIManager.ENodeUnion?, _type: T) 检查节点类型，这样你便可以轻松通过emmylua访问节点的方法
@@ -63,6 +61,36 @@ end)
 | ENode:wait(_interval: integer): UIManager.Promise<ENode>                                                                                    | 内部等待一定帧数，返回一个Promise对象，支持链式调用                   |
 | UIManager.Promise:wait(_interval: integer): UIManager.Promise<T>                                                                            | 内部等待一定帧数，返回一个Promise对象，支持链式调用                   |
 | UIManager.Promise:done_then(_callback fun(e: T) : G): UIManager.Promise<G>                                                                  | 在上一节点完成之后立即执行回调函数，返回一个Promise对象，支持链式调用 |
+
+# 示例代码
+
+
+```lua
+require "UIManager.Utils"
+UIManager.Builder(require "test_data")
+
+LuaAPI.call_delay_frame(1, function()
+    x = UIManager.query_nodes_by_name("正方形")[1] --[[@as UIManager.EImage]]
+    x
+        :wait(30)
+        :done_then(
+            function(e)
+                print(e)
+                return { x = 123 }
+            end)
+        :wait(30)
+        :done_then(
+            function(e)
+                return { y = e.x }
+            end)
+        :wait(30)
+        :done_then(function(e)
+            print(e)
+        end)
+end)
+
+```
+
 
 # 贡献
 

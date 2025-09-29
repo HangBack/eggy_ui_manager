@@ -1,10 +1,10 @@
----@class UIManager.Listener : Class
+---@class UIManager.Listener : ClassUtil
 ---@field id integer
 ---@field _event string 事件名称
 ---@field _callback function 回调函数
 ---@field _node_id ENode 节点ID
 ---@field _trigger integer 触发器
-local Listener = Class("UIManager.Listener")
+local Listener = UIManager.Class("UIManager.Listener")
 local id = 1
 local ListenerMapping = {}
 local event_handlers = UIManager.event_handlers

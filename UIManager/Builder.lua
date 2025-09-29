@@ -1,5 +1,5 @@
----@class UIManager.Builder : Class
-local Builder = Class("UIManager.Builder")
+---@class UIManager.Builder : ClassUtil
+local Builder = UIManager.Class("UIManager.Builder")
 local nodes_list = UIManager.nodes_list
 local name_node_mapping = UIManager.name_node_mapping
 
@@ -10,7 +10,6 @@ local name_node_mapping = UIManager.name_node_mapping
 ---@field [1] configName 名称
 ---@field [2] configType 类型
 
----@async
 ---@param _config_list table<ENode, BuilderConfig>
 function Builder:init(_config_list)
     if next(_config_list) == nil then
@@ -39,12 +38,12 @@ function Builder:build_node(id, _config)
     end
     local buildName = _config[1]
     local buildType = _config[2]
-    local buildFunc = UIManager[buildType] --[[@as UIManager.ENode?]]
+    local buildFunc = UIManager[buildType--[[@as string]]] --[[@as UIManager.ENode?]]
     local uinode
     if buildFunc then
-        uinode = buildFunc:new(id, buildName)
+        uinode = buildFunc(id, buildName)
     else
-        uinode = UIManager.ENode:new(id, buildName)
+        uinode = UIManager.ENode(id, buildName)
     end
 
     local name_node = name_node_mapping[buildName]

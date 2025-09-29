@@ -6,8 +6,7 @@
 ---@field protected __protected_image_color Color 图片颜色
 ---@field protected __protected_image_texture ImageKey 图片预设
 ---@field protected __protected_transition_time Fixed 受保护的样式变化时间
----@field wait fun(self: UIManager.EImage, _interval: integer): UIManager.Promise<UIManager.EImage>
-local EImage = Class("UIManager.EImage", UIManager.ENode)
+local EImage = UIManager.Class("UIManager.EImage", UIManager.ENode)
 local allroles = UIManager.allroles
 
 ---@param _node ENode
