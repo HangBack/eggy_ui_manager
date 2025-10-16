@@ -31,7 +31,7 @@ function ENode.__custom_index(tbl, key)
             if not data then
                 return client_data[-1][key]
             end
-            if not data[key] then
+            if data[key] == nil then
                 return client_data[-1][key]
             end
             return data[key]
