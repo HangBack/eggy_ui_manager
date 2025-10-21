@@ -262,25 +262,31 @@ end
 ---@return UIManager.Listener
 function ENode:listen(_event, _callback)
     local listener = UIManager.Listener() --[[@as UIManager.Listener]]
+    local has_handler = false
+    if event_handlers[_event] then
+        has_handler = true
+    end
     local handler = event_handlers[_event] or {}
     event_handlers[_event] = handler
     local trigger
 
     ---@param data {eui_node_id: ENode, role: Role}
-    trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
-        local handler_data = event_handlers[_event][data.eui_node_id]
-        if handler_data and handler_data.callbacks and not handler_data.node._disabled then
-            UIManager.client_role = data.role
-            for _, callback in ipairs(handler_data.callbacks) do
-                callback({
-                    role = data.role,
-                    target = handler_data.node,
-                    listener = listener
-                })
+    if not has_handler then
+        trigger = LuaAPI.global_register_custom_event(_event, function(_, _, data)
+            local handler_data = event_handlers[_event][data.eui_node_id]
+            if handler_data and handler_data.callbacks and not handler_data.node._disabled then
+                UIManager.client_role = data.role
+                for _, callback in ipairs(handler_data.callbacks) do
+                    callback({
+                        role = data.role,
+                        target = handler_data.node,
+                        listener = listener
+                    })
+                end
+                UIManager.client_role = nil
             end
-            UIManager.client_role = nil
-        end
-    end)
+        end)
+    end
     handler.trigger = trigger
 
     local handler_data = handler[self.__protected_id]
