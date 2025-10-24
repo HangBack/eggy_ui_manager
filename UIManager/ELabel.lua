@@ -1,4 +1,3 @@
-local ENode = require("UIManager.ENode")
 ---@class UIManager.ELabel : UIManager.ENode
 ---@field __name "UIManager.ELabel"
 ---@field text string 文本内容

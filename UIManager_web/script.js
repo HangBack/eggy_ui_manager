@@ -108,7 +108,7 @@ class UINodesMerger {
             if (match) {
                 const [, eng_name, name, id, type] = match;
                 const key = eng_name || name;
-                
+
 
                 // 以ID为键，名称和类型为值
                 this.data[id] = { key, type };
@@ -130,6 +130,8 @@ class UINodesMerger {
             output += `\t["${id}"] = {"${item.key}", "${item.type}"},\n`;
         }
 
+        // 新增 length 字段
+        output += `\tlength = ${sortedIds.length}\n`;
         output += '}';
         document.getElementById('outputText').value = output;
     }

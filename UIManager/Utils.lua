@@ -1,4 +1,3 @@
-local Class = require 'UIManager.ClassUtils'
 ---@class UIManager
 ---@field client_role Role?
 UIManager = {}
@@ -6,7 +5,7 @@ UIManager = {}
 UIManager.allroles = GameAPI.get_all_valid_roles()
 UIManager.nodes_list = {} --[[@as table<ENode, UIManager.ENode?>]]
 UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
----@type 
+---@type
 --- {
 ---     [string]: {
 ---         ["trigger"]: integer,
@@ -23,29 +22,14 @@ UIManager.name_node_mapping = {} --[[@as table<string, UIManager.ENode[]?> ]]
 --- }
 UIManager.event_handlers = {}
 
-UIManager.Class = Class
-UIManager.ECanvas = require "UIManager.ECanvas"
-UIManager.ENode = require "UIManager.ENode"
-UIManager.ELabel = require "UIManager.ELabel"
-UIManager.EButton = require "UIManager.EButton"
-UIManager.EImage = require "UIManager.EImage"
-UIManager.EProgressbar = require "UIManager.EProgressbar"
-UIManager.EInputField = require "UIManager.EInputField"
-UIManager.Builder = require "UIManager.Builder"
-UIManager.Listener = require "UIManager.Listener"
-UIManager.Array = require "UIManager.Array"
-UIManager.Promise = require "UIManager.Promise"
-UIManager.ArrayReadOnly = require "UIManager.ArrayReadOnly"
 
----@alias UIManager.ENodeUnion UIManager.ENode | UIManager.ELabel | UIManager.EImage
 
----@enum UIManager.ENodeType
-UIManager.ENodeType = {
-    ELabel = "UIManager.ELabel",
-    EButton = "UIManager.EButton",
-    EImage = "UIManager.EImage",
-    ENode = "UIManager.ENode",
+---@enum UIManager.EVENTS
+UIManager.EVENTS = {
+    BUILDER_COMPLETE_ONE_BATCH = "UIMANAGER:BUILDER_COMPLETE_ONE_BATCH",
+    BUILDER_INIT_DONE = "UIMANAGER:BUILDER_INIT_DONE",
 }
+
 
 -- 通过名称查询节点数组
 ---@param _name string
@@ -126,3 +110,27 @@ UIManager.set_frame_out = function(interval, callback, count, immediately)
     end
     return frameout
 end
+require 'UIManager.ClassUtils'
+UIManager.Class = Class
+UIManager.ENode = require 'UIManager.ENode'
+UIManager.ECanvas = require 'UIManager.ECanvas'
+UIManager.ELabel = require 'UIManager.ELabel'
+UIManager.EButton = require 'UIManager.EButton'
+UIManager.EImage = require 'UIManager.EImage'
+UIManager.EProgressbar = require 'UIManager.EProgressbar'
+UIManager.EInputField = require 'UIManager.EInputField'
+UIManager.Builder = require 'UIManager.Builder'
+UIManager.Listener = require 'UIManager.Listener'
+UIManager.Array = require 'UIManager.Array'
+UIManager.Promise = require 'UIManager.Promise'
+UIManager.ArrayReadOnly = require 'UIManager.ArrayReadOnly'
+
+---@alias UIManager.ENodeUnion UIManager.ENode | UIManager.ELabel | UIManager.EImage
+
+---@enum UIManager.ENodeType
+UIManager.ENodeType = {
+    ELabel = "UIManager.ELabel",
+    EButton = "UIManager.EButton",
+    EImage = "UIManager.EImage",
+    ENode = "UIManager.ENode",
+}
