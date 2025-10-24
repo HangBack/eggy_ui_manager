@@ -62,6 +62,12 @@ end)
 | UIManager.Promise:wait(_interval: integer): UIManager.Promise<T>                                                                            | 内部等待一定帧数，返回一个Promise对象，支持链式调用                   |
 | UIManager.Promise:done_then(_callback fun(e: T) : G): UIManager.Promise<G>                                                                  | 在上一节点完成之后立即执行回调函数，返回一个Promise对象，支持链式调用 |
 
+# 相关事件
+| 事件名称                                    | 说明                     | 参数                                                |
+| ------------------------------------------- | ------------------------ | --------------------------------------------------- |
+| UIManager.EVENTS.BUILDER_COMPLETE_ONE_BATCH | 每次成功处理一批任务触发 | processd: integer 已处理数量，total: integer 总数量 |
+| UIManager.EVENTS.BUILDER_INIT_DONE          | 构建完成触发             | nil                                                 |
+
 # 示例代码
 
 
